@@ -1,5 +1,15 @@
 # User Management System (Spring Boot + JWT + RBAC)
 
+> [!TIP]
+> **Quick Start / Get Authorised:**
+> Paste this in `POST /api/auth/login` (or in Swagger UI at http://localhost:9990/swagger-ui.html) to get authorised:
+> ```json
+> {
+>   "email": "admin@example.com",
+>   "password": "Admin@123"
+> }
+> ```
+
 A RESTful User Management System built with Spring Boot, featuring Role-Based Access Control (RBAC), JWT token authentication, in-memory relational database persistence, input validation, and centralized error handling.
 
 ---
