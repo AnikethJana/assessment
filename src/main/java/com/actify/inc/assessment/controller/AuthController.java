@@ -1,6 +1,5 @@
 package com.actify.inc.assessment.controller;
 
-import com.actify.inc.assessment.dto.ApiResponse;
 import com.actify.inc.assessment.dto.AuthRequest;
 import com.actify.inc.assessment.dto.AuthResponse;
 import com.actify.inc.assessment.service.AuthService;
@@ -19,8 +18,7 @@ public class AuthController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<ApiResponse<AuthResponse>> login(@Valid @RequestBody AuthRequest request) {
-        AuthResponse response = authService.login(request);
-        return ResponseEntity.ok(ApiResponse.success("Authentication successful", response));
+    public ResponseEntity<AuthResponse> login(@Valid @RequestBody AuthRequest request) {
+        return ResponseEntity.ok(authService.login(request));
     }
 }

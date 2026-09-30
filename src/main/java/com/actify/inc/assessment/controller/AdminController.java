@@ -1,6 +1,5 @@
 package com.actify.inc.assessment.controller;
 
-import com.actify.inc.assessment.dto.ApiResponse;
 import com.actify.inc.assessment.dto.AssignRolesRequest;
 import com.actify.inc.assessment.dto.UserCreateRequest;
 import com.actify.inc.assessment.dto.UserResponse;
@@ -26,40 +25,35 @@ public class AdminController {
     }
 
     @PostMapping
-    public ResponseEntity<ApiResponse<UserResponse>> createUser(@Valid @RequestBody UserCreateRequest request) {
-        UserResponse createdUser = userService.createUser(request);
-        return new ResponseEntity<>(ApiResponse.created("User created successfully", createdUser), HttpStatus.CREATED);
+    public ResponseEntity<UserResponse> createUser(@Valid @RequestBody UserCreateRequest request) {
+        return new ResponseEntity<>(userService.createUser(request), HttpStatus.CREATED);
     }
 
     @GetMapping
-    public ResponseEntity<ApiResponse<List<UserResponse>>> getAllUsers() {
-        List<UserResponse> users = userService.getAllUsers();
-        return ResponseEntity.ok(ApiResponse.success("Users retrieved successfully", users));
+    public ResponseEntity<List<UserResponse>> getAllUsers() {
+        return ResponseEntity.ok(userService.getAllUsers());
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<ApiResponse<UserResponse>> getUserById(@PathVariable Long id) {
-        UserResponse user = userService.getUserById(id);
-        return ResponseEntity.ok(ApiResponse.success("User retrieved successfully", user));
+    public ResponseEntity<UserResponse> getUserById(@PathVariable Long id) {
+        return ResponseEntity.ok(userService.getUserById(id));
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<ApiResponse<UserResponse>> updateUser(@PathVariable Long id,
-                                                               @Valid @RequestBody UserUpdateRequest request) {
-        UserResponse updatedUser = userService.updateUser(id, request);
-        return ResponseEntity.ok(ApiResponse.success("User updated successfully", updatedUser));
+    public ResponseEntity<UserResponse> updateUser(@PathVariable Long id,
+                                                   @Valid @RequestBody UserUpdateRequest request) {
+        return ResponseEntity.ok(userService.updateUser(id, request));
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<ApiResponse<Void>> deleteUser(@PathVariable Long id) {
+    public ResponseEntity<Void> deleteUser(@PathVariable Long id) {
         userService.deleteUser(id);
-        return ResponseEntity.ok(ApiResponse.success("User deleted successfully", null));
+        return ResponseEntity.ok().build();
     }
 
     @PostMapping("/{id}/roles")
-    public ResponseEntity<ApiResponse<UserResponse>> assignRoles(@PathVariable Long id,
-                                                                @Valid @RequestBody AssignRolesRequest request) {
-        UserResponse updatedUser = userService.assignRolesToUser(id, request);
-        return ResponseEntity.ok(ApiResponse.success("Roles assigned successfully", updatedUser));
+    public ResponseEntity<UserResponse> assignRoles(@PathVariable Long id,
+                                                    @Valid @RequestBody AssignRolesRequest request) {
+        return ResponseEntity.ok(userService.assignRolesToUser(id, request));
     }
 }

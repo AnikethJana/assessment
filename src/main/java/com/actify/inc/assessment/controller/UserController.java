@@ -1,6 +1,5 @@
 package com.actify.inc.assessment.controller;
 
-import com.actify.inc.assessment.dto.ApiResponse;
 import com.actify.inc.assessment.dto.TaskResponse;
 import com.actify.inc.assessment.dto.UserResponse;
 import com.actify.inc.assessment.service.TaskService;
@@ -26,16 +25,12 @@ public class UserController {
     }
 
     @GetMapping("/profile")
-    public ResponseEntity<ApiResponse<UserResponse>> getProfile(Authentication authentication) {
-        String email = authentication.getName();
-        UserResponse profile = userService.getUserProfile(email);
-        return ResponseEntity.ok(ApiResponse.success("Profile retrieved successfully", profile));
+    public ResponseEntity<UserResponse> getProfile(Authentication authentication) {
+        return ResponseEntity.ok(userService.getUserProfile(authentication.getName()));
     }
 
     @GetMapping("/tasks")
-    public ResponseEntity<ApiResponse<List<TaskResponse>>> getAssignedTasks(Authentication authentication) {
-        String email = authentication.getName();
-        List<TaskResponse> tasks = taskService.getTasksByUserEmail(email);
-        return ResponseEntity.ok(ApiResponse.success("Assigned tasks retrieved successfully", tasks));
+    public ResponseEntity<List<TaskResponse>> getAssignedTasks(Authentication authentication) {
+        return ResponseEntity.ok(taskService.getTasksByUserEmail(authentication.getName()));
     }
 }

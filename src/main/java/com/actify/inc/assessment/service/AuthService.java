@@ -4,17 +4,14 @@ import com.actify.inc.assessment.dto.AuthRequest;
 import com.actify.inc.assessment.dto.AuthResponse;
 import com.actify.inc.assessment.entity.Role;
 import com.actify.inc.assessment.entity.User;
-import com.actify.inc.assessment.exception.ResourceNotFoundException;
 import com.actify.inc.assessment.repository.UserRepository;
 import com.actify.inc.assessment.security.JwtTokenProvider;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
+import java.util.HashSet;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 @Service
 public class AuthService {
@@ -32,18 +29,23 @@ public class AuthService {
     }
 
     public AuthResponse login(AuthRequest request) {
-        Authentication authentication = authenticationManager.authenticate(
+        authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(request.getEmail(), request.getPassword())
         );
 
         String token = tokenProvider.generateToken(request.getEmail());
 
-        User user = userRepository.findByEmail(request.getEmail())
-                .orElseThrow(() -> new ResourceNotFoundException("User not found with email: " + request.getEmail()));
+        User user = userRepository.findByEmail(request.getEmail()).orElse(null);
+        if (user == null) {
+            throw new RuntimeException("User not found");
+        }
 
-        Set<String> roles = user.getRoles().stream()
-                .map(Role::getName)
-                .collect(Collectors.toSet());
+        Set<String> roles = new HashSet<>();
+        if (user.getRoles() != null) {
+            for (Role role : user.getRoles()) {
+                roles.add(role.name());
+            }
+        }
 
         return new AuthResponse(token, user.getId(), user.getName(), user.getEmail(), roles);
     }

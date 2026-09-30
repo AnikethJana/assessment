@@ -1,25 +1,18 @@
 package com.actify.inc.assessment.dto;
 
+import com.actify.inc.assessment.entity.Role;
 import jakarta.validation.constraints.NotEmpty;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
 import java.util.Set;
 
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class AssignRolesRequest {
 
     @NotEmpty(message = "Roles must not be empty")
-    private Set<String> roles;
-
-    public AssignRolesRequest() {
-    }
-
-    public AssignRolesRequest(Set<String> roles) {
-        this.roles = roles;
-    }
-
-    public Set<String> getRoles() {
-        return roles;
-    }
-
-    public void setRoles(Set<String> roles) {
-        this.roles = roles;
-    }
+    private Set<Role> roles;
 }

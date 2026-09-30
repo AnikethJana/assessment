@@ -2,7 +2,7 @@
 
 > [!TIP]
 > **Quick Start / Get Authorised:**
-> Paste this in `POST /api/auth/login` (or in Swagger UI at http://localhost:9990/swagger-ui.html) to get authorised:
+> Paste this in `POST /api/auth/login` (or in Swagger UI at https://actify.up.railway.app/swagger-ui/index.html) to get authorised:
 > ```json
 > {
 >   "email": "admin@example.com",

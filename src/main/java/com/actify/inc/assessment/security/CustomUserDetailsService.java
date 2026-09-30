@@ -1,5 +1,6 @@
 package com.actify.inc.assessment.security;
 
+import com.actify.inc.assessment.entity.Role;
 import com.actify.inc.assessment.entity.User;
 import com.actify.inc.assessment.repository.UserRepository;
 import org.springframework.security.core.GrantedAuthority;
@@ -10,13 +11,9 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.HashSet;
 import java.util.Set;
-import java.util.stream.Collectors;
 
-/**
- * Bridges Spring Security with our User database table.
- * Given an email, it fetches the user and maps their roles into GrantedAuthority objects (e.g. ROLE_ADMIN).
- */
 @Service
 public class CustomUserDetailsService implements UserDetailsService {
 
@@ -29,18 +26,17 @@ public class CustomUserDetailsService implements UserDetailsService {
     @Override
     @Transactional(readOnly = true)
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
-        User user = userRepository.findByEmail(email)
-                .orElseThrow(() -> new UsernameNotFoundException("User not found with email: " + email));
+        User user = userRepository.findByEmail(email).orElse(null);
+        if (user == null) {
+            throw new UsernameNotFoundException("User not found with email: " + email);
+        }
 
-        Set<GrantedAuthority> authorities = user.getRoles().stream()
-                .map(role -> {
-                    String roleName = role.getName().trim().toUpperCase();
-                    if (!roleName.startsWith("ROLE_")) {
-                        roleName = "ROLE_" + roleName;
-                    }
-                    return new SimpleGrantedAuthority(roleName);
-                })
-                .collect(Collectors.toSet());
+        Set<GrantedAuthority> authorities = new HashSet<>();
+        if (user.getRoles() != null) {
+            for (Role role : user.getRoles()) {
+                authorities.add(new SimpleGrantedAuthority(role.name()));
+            }
+        }
 
         return new org.springframework.security.core.userdetails.User(
                 user.getEmail(),

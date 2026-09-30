@@ -1,10 +1,10 @@
 package com.actify.inc.assessment.controller;
 
-import com.actify.inc.assessment.dto.ApiResponse;
 import com.actify.inc.assessment.dto.TaskCreateRequest;
 import com.actify.inc.assessment.dto.TaskResponse;
 import com.actify.inc.assessment.dto.UserResponse;
 import com.actify.inc.assessment.service.TaskService;
+import com.actify.inc.assessment.service.UserService;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -19,20 +19,20 @@ import java.util.List;
 public class ManagerController {
 
     private final TaskService taskService;
+    private final UserService userService;
 
-    public ManagerController(TaskService taskService) {
+    public ManagerController(TaskService taskService, UserService userService) {
         this.taskService = taskService;
+        this.userService = userService;
     }
 
     @GetMapping("/users")
-    public ResponseEntity<ApiResponse<List<UserResponse>>> getAllUsersWithTasks() {
-        List<UserResponse> users = taskService.getAllUsersWithTasks();
-        return ResponseEntity.ok(ApiResponse.success("Users with assigned tasks retrieved successfully", users));
+    public ResponseEntity<List<UserResponse>> getAllUsersWithTasks() {
+        return ResponseEntity.ok(userService.getAllUsers());
     }
 
     @PostMapping("/tasks")
-    public ResponseEntity<ApiResponse<TaskResponse>> assignTask(@Valid @RequestBody TaskCreateRequest request) {
-        TaskResponse taskResponse = taskService.assignTask(request);
-        return new ResponseEntity<>(ApiResponse.created("Task assigned successfully", taskResponse), HttpStatus.CREATED);
+    public ResponseEntity<TaskResponse> assignTask(@Valid @RequestBody TaskCreateRequest request) {
+        return new ResponseEntity<>(taskService.assignTask(request), HttpStatus.CREATED);
     }
 }
