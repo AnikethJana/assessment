@@ -1,0 +1,26 @@
+spring:
+  application:
+    name: assessment
+  datasource:
+    url: jdbc:h2:mem:assessmentdb;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE
+    driver-class-name: org.h2.Driver
+    username: sa
+    password: 
+  jpa:
+    database-platform: org.hibernate.dialect.H2Dialect
+    hibernate:
+      ddl-auto: update
+    show-sql: false
+  h2:
+    console:
+      enabled: true
+      path: /h2-console
+
+app:
+  jwt:
+    secret: "SuperSecretKeyForJwtAuthenticationAssessment2026!"
+    expiration-ms: 86400000 # 24 hours
+
+server:
+  port: 9990
+
